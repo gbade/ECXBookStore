@@ -1,0 +1,128 @@
+﻿@model ECXBookApp.Models.BooksViewModel
+@using ECXBookApp.Entities.Models;
+@using Newtonsoft.Json;
+
+@{
+    ViewData["Title"] = "Home Page";
+    var user = TempData["User"] != null
+                ? (User)TempData["User"] : null;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>This is the ECX Book Store</p>
+</div>
+
+<div class="text-center">
+    <div class="container">
+        @if (TempData["BookInventory"] != null)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Genre</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Publish Date</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Borrowed</th>
+                        <th scope="col">Borrowed By</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        }
+
+        @if (TempData["BookInventory"] != null)
+        {
+            var json = TempData["BookInventory"].ToString();
+            var books = JsonConvert.DeserializeObject<List<Inventory>>(json);
+
+            @if (books != null && books.Count() > 0)
+            {
+                @foreach (var data in books)
+                {
+                    if (!data.IsBorrowed && user != null)
+                    {
+                        data.UserId = user.UserID;
+                    }
+
+                    <form method="post">
+                        <table class="table table-stripped">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @data.Book.Id
+                                        <input name="BooksData.Book.Id" type="hidden" value="@data.Book.Id">
+                                    </td>
+                                    <td>
+                                        @data.Book.Author
+                                        <input name="BooksData.Book.Author" type="hidden" value="@data.Book.Author">
+                                    </td>
+                                    <td>
+                                        @data.Book.Title
+                                        <input name="BooksData.Book.Title" type="hidden" value="@data.Book.Title">
+                                    </td>
+                                    <td>
+                                        @data.Book.Genre
+                                        <input name="BooksData.Book.Genre" type="hidden" value="@data.Book.Genre">
+                                    </td>
+                                    <td>
+                                        @data.Book.Price
+                                        <input name="BooksData.Book.Price" type="hidden" value="@data.Book.Price">
+                                    </td>
+                                    <td>
+                                        @data.Book.PublishDate
+                                        <input name="BooksData.Book.PublishDate" type="hidden" value="@data.Book.PublishDate">
+                                    </td>
+                                    <td>
+                                        @data.Book.Description
+                                        <input name="BooksData.Book.Description" type="hidden" value="@data.Book.Description">
+                                    </td>
+                                    <td>
+                                        @((data.IsBorrowed) ? "Yes" : "No")
+                                        <input name="BooksData.IsBorrowed" type="hidden" value="@data.IsBorrowed.ToString()">
+                                    </td>
+                                    <td>
+                                        @((!string.IsNullOrEmpty(data.BorrowedBy)) ? data.BorrowedBy : "N/A")
+                                        <input name="BooksData.BorrowedBy" type="hidden" value="@data.BorrowedBy">
+                                    </td>
+                                    <td>
+                                        <input name="BooksData.UserId" type="hidden" value="@data.UserId">
+                                    </td>
+                                    <td>
+                                        @if (data.IsBorrowed)
+                                        {
+                                            <input type="submit" name="save" value="Borrow"
+                                                   disabled="disabled" asp-action="BorrowBook"
+                                                   asp-controller="Home" class="btn btn-primary" />
+                                        }
+                                        else
+                                        {
+                                            <input type="submit" name="save" value="Borrow"
+                                                   asp-action="BorrowBook" asp-controller="Home"
+                                                   class="btn btn-primary" />
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (data.IsBorrowed)
+                                        {
+                                            <input type="submit" name="save" value="Return"
+                                                   asp-action="ReturnBook" asp-controller="Home"
+                                                   class="btn btn-warning" />
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                }
+            }
+        }
+    </div>
+</div>
+
