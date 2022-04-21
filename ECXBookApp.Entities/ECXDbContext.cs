@@ -100,10 +100,5 @@ namespace ECXBookApp.Entities
             };
             User.Add(defaultUser);
         }
-
-        public List<User> GetUsers()
-        {
-            return User.Local.ToList<User>();
-        }
     }
 }

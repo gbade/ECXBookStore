@@ -3,7 +3,6 @@ using ECXBookApp.Business.Contracts;
 using Moq;
 using Microsoft.EntityFrameworkCore;
 using ECXBookApp.Entities;
-using ECXBookApp.Business.Managers;
 using ECXBookApp.Entities.Models;
 using System;
 using System.Collections.Generic;
@@ -39,6 +38,48 @@ namespace ECXBookApp.Tests
                 //Assert
                 Assert.NotNull(data);
                 Assert.Equal(2, size);
+            }
+        }
+
+        [Fact]
+        public void TestInMemoryDbInsertNewUser_ShouldIncreaseCountByOne()
+        {
+            using (var context = new ECXDbContext(options))
+            {
+                //Arrange
+                User user = new User
+                {
+                    UserID = "59aae14f-2a66-4a9b-8b14-a098569f76e1",
+                    UserName = "jane_doe",
+                    Password = "jane_d234",
+                    FirstName = "Jane",
+                    LastName = "Doe",
+                    BorrowedBooks = new BooksBorrowed
+                    {
+                        Book = new List<Book>()
+                        {
+                            new Book
+                            {
+                                Id = "bk112",
+                                Author = "Galos, Mike",
+                                Title = "Visual Studio 7: A Comprehensive Guide",
+                                Genre = "Computer",
+                                Price = 49.95m,
+                                PublishDate = new DateTime(2000, 04, 16, 0, 0, 0),
+                                Description = @"Microsoft Visual Studio 7 is explored in depth,
+                                    looking at how Visual Basic, Visual C++, C#, and ASP+ are
+                                    integrated into a comprehensive development
+                                    environment."
+                            }
+                        }
+                    }
+                };
+
+                //Act
+                context.User.Add(user);
+
+                //Assert
+                Assert.Equal(3, context.User.Local.Count);
             }
         }
 

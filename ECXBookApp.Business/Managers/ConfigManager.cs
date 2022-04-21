@@ -1,5 +1,4 @@
-﻿using System;
-using ECXBookApp.Business.Contracts;
+﻿using ECXBookApp.Business.Contracts;
 
 namespace ECXBookApp.Business.Managers
 {

@@ -115,7 +115,7 @@ namespace ECXBookApp.Business.Managers
 
         private List<User> GetUsers()
         {
-            return _context.User.Local.ToList();// GetUsers();
+            return _context.User.Local.ToList();
         }
     }
 }

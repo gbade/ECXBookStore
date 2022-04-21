@@ -33,7 +33,6 @@ namespace ECXBookApp
             // Add framework services.
             services.AddMvc();
 
-            //services.AddDbContext<ECXDbContext>(opt => opt.UseInMemoryDatabase(databaseName:"ECXBookStore"));
             services.AddDbContext<ECXDbContext>(
             a => a.UseInMemoryDatabase(databaseName:"ECXBookStore")
             .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
